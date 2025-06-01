@@ -50,12 +50,29 @@ class ImageGallery extends Component {
   render() {
     const { images, status, error } = this.state;
 
-    return (
-      <ImageGalleryItem>
-        ImageGalleryItem
-        <ul className="gallery"></ul>
-      </ImageGalleryItem>
-    );
+    if (status === STATUS.IDLE) {
+      return <div>Enter a search term to begin.</div>;
+    }
+
+    if (status === STATUS.PENDING) {
+      return <div>Loading...</div>;
+    }
+
+    if (status === STATUS.REJECTED) {
+      return <div>Error: {error}</div>;
+    }
+
+    if (status === STATUS.RESOLVED) {
+      return (
+        <ul className="gallery">
+          {images.map(image => (
+            <ImageGalleryItem key={image.id} image={image} />
+          ))}
+        </ul>
+      );
+    }
+
+    return null;
   }
 }
 
