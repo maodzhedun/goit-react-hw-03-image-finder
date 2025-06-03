@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { AppWrap } from "./App.styled";
 
 import Searchbar from 'components/Searchbar/Searchbar';
 import ImageGallery from 'components/ImageGallery/ImageGallery';
@@ -14,10 +15,10 @@ class App extends Component {
 
   render() {
     return (
-      <div>
+      <AppWrap>
         <Searchbar handleSearch={this.handleSearch} />
         <ImageGallery searhImage={this.state.searhImage} />
-      </div>
+      </AppWrap>
     );
   }
 }

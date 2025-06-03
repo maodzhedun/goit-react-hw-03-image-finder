@@ -1,10 +1,11 @@
 import React from 'react';
+import {ButtonMore} from "./Button.styled";
 
 const Button = ({ onClick }) => {
   return (
-    <button type="button" onClick={onClick}>
+    <ButtonMore type="button" onClick={onClick}>
       Load more
-    </button>
+    </ButtonMore>
   );
 };
 

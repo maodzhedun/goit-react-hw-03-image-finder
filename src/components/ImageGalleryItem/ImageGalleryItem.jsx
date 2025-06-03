@@ -1,8 +1,10 @@
+import { ImageGalleryItemEl, ImageGalleryItemImage } from "./ImageGalleryItem.styled";
+
 const ImageGalleryItem = ({image, onClick}) => {
 
-  return ( <li className="gallery-item">
-    <img src={image.webformatURL} alt={image.tags} onClick={onClick}/>
-  </li>)
+  return ( <ImageGalleryItemEl>
+    <ImageGalleryItemImage src={image.webformatURL} alt={image.tags} onClick={onClick}/>
+  </ImageGalleryItemEl>)
 }
 
 export default ImageGalleryItem

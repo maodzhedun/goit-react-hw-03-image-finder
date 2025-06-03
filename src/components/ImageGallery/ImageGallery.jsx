@@ -4,6 +4,7 @@ import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import Loader from 'components/Loader/Loader';
 import Button from 'components/Button/Button';
 import Modal from 'components/Modal/Modal';
+import { ImageGalleryEl } from "./ImageGallery.styled";
 
 const STATUS = {
   IDLE: 'idle',
@@ -90,8 +91,8 @@ class ImageGallery extends Component {
     }
 
     if (status === RESOLVED) {
-      return (
-        <ul className="gallery">
+      return (<>
+      <ImageGalleryEl>
           {images.map(image => (
             <ImageGalleryItem
               key={image.id}
@@ -99,13 +100,15 @@ class ImageGallery extends Component {
               onClick={() => this.onOpenModal(image.largeImageURL)}
             />
           ))}
+        </ImageGalleryEl>
           {hasMoreImages && <Button onClick={this.onLoadMore} />}
           {!hasMoreImages && <p>No more images found.</p>}
 
           {openModal && (
             <Modal imageUrl={largeImageURL} onCloseModal={this.onCloseModal} />
           )}
-        </ul>
+      </>
+        
       );
     }
 
