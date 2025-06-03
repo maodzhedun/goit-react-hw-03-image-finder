@@ -1,6 +1,7 @@
-const ImageGalleryItem = ({image}) => {
+const ImageGalleryItem = ({image, onClick}) => {
+
   return ( <li className="gallery-item">
-    <img src={image.webformatURL} alt={image.tags} />
+    <img src={image.webformatURL} alt={image.tags} onClick={onClick}/>
   </li>)
 }
 

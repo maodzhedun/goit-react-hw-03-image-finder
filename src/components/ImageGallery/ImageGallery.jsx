@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { getData } from 'components/services/api';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
-import Loader, {  } from "components/Loader/Loader";
+import Loader from 'components/Loader/Loader';
+import Button from 'components/Button/Button';
+import Modal from 'components/Modal/Modal';
 
 const STATUS = {
   IDLE: 'idle',
@@ -15,10 +17,13 @@ const { IDLE, PENDING, REJECTED, RESOLVED } = STATUS;
 class ImageGallery extends Component {
   state = {
     images: [],
-    pages: 1,
+    page: 1,
     searhImage: '',
+    openModal: false,
+    largeImageURL: '',
     status: IDLE,
     error: null,
+    hasMoreImages: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -26,40 +31,58 @@ class ImageGallery extends Component {
       prevProps.searhImage !== this.props.searhImage &&
       this.props.searhImage
     ) {
-      this.fetchImages(this.props.searhImage);
+      this.setState({ images: [], page: 1, hasMoreImages: true }, () => {
+        this.fetchImages(this.props.searhImage, 1);
+      });
     }
   }
 
-  fetchImages = async query => {
+  onLoadMore = () => {
+    const { searhImage, page } = this.state;
+    const nextPage = page + 1;
+    this.setState({ page: nextPage }, () => {
+      this.fetchImages(searhImage, nextPage);
+    });
+  };
+
+  onOpenModal = largeImageURL => {
+    this.setState({ openModal: true, largeImageURL });
+  };
+
+  onCloseModal = () => {
+    this.setState({ openModal: false, largeImageURL: '' });
+  };
+
+  fetchImages = async (query, page) => {
     this.setState({ status: PENDING });
 
     try {
-      const response = await getData(1, query); // Fetching the first page of results
-      console.log(response.data);
-      console.log(response.data.hits);
-      this.setState({
-        images: response.data.hits, // Assuming the response contains an array of hits
+      const response = await getData(page, query); // Fetching the first page of results
+      const newImages = response.data.hits;
+
+      this.setState(prevState => ({
+        images: [...prevState.images, ...newImages], // Assuming the response contains an array of hits
         status: RESOLVED,
-      });
+        hasMoreImages: newImages.length > 0 && newImages.length === 12,
+      }));
     } catch (error) {
       this.setState({
         error: error.message,
         status: REJECTED,
       });
-      // console.log(error.message);
     }
   };
 
   render() {
-    const { images, status, error } = this.state;
+    const { images, status, error, openModal, largeImageURL, hasMoreImages } =
+      this.state;
 
     if (status === IDLE) {
       return <div>Enter a search term to begin.</div>;
     }
 
     if (status === PENDING) {
-      // return <div>Loading...</div>;
-      return <Loader/>
+      return <Loader />;
     }
 
     if (status === REJECTED) {
@@ -70,8 +93,18 @@ class ImageGallery extends Component {
       return (
         <ul className="gallery">
           {images.map(image => (
-            <ImageGalleryItem key={image.id} image={image} />
+            <ImageGalleryItem
+              key={image.id}
+              image={image}
+              onClick={() => this.onOpenModal(image.largeImageURL)}
+            />
           ))}
+          {hasMoreImages && <Button onClick={this.onLoadMore} />}
+          {!hasMoreImages && <p>No more images found.</p>}
+
+          {openModal && (
+            <Modal imageUrl={largeImageURL} onCloseModal={this.onCloseModal} />
+          )}
         </ul>
       );
     }
