@@ -1,8 +1,8 @@
 {
-  "name": "goit-react-hw-03-image-finde",
+  "name": "goit-react-hw-03-image-finder",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://maodzhedun.github.io/goit-react-hw-03-image-finde/",
+  "homepage": "https://maodzhedun.github.io/goit-react-hw-03-image-finder/",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
